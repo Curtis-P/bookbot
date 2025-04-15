@@ -1,33 +1,27 @@
+from stats import count_words, get_occurances, get_report
+import sys
+
 def main():
-    with open("books/frankenstein.txt") as f:
-        file_contents = f.read()
-
-    words = file_contents.split()
-    chars = list(file_contents.lower())
-    charDict = {}
-    for x in range(len(chars)):
-        if chars[x] not in charDict:
-            charDict[chars[x]] = 1
-        else:
-            charDict[chars[x]] += 1
-    alphaList=[]
-
-    for x in charDict:
-        if x.isalpha():
-            alphaList.append({'char': x, 'occurance' : charDict[x]})
-
-    alphaList.sort(reverse=True, key=lambda d: d['occurance'])
-
-    for x in alphaList:
-        if x == alphaList[0]:
-            print("--- Begin report of books/frankenstein.txt ---\n")
-            print(f"{len(words)} words found in the document \n")
-            print(f"The '{x['char']}' character was found {x['occurance']} times")
-        elif x != alphaList[len(alphaList) -1]:
-            print(f"The '{x['char']}' character was found {x['occurance']} times")
-        else:
-            print(f"The '{x['char']}' character was found {x['occurance']} times")
-            print("--- End report ---")
+    if len(sys.argv) != 2:
+        print(f"Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    else:
+        path = sys.argv[1]
     
+    print(f"============ BOOKBOT ============\n")
+    file_contents = get_book_text(path)
+    print(f"Analyzing book found at {path}...\n")
+    print(file_contents.split("\n")[0])
+    count = count_words(file_contents)
+    charDict = get_occurances(file_contents)
+    get_report(charDict)
+    
+def get_book_text(filepath):
+    with open(filepath) as f:
+        file_contents = f.read()
+    return file_contents
+
+
+
 
 main()
